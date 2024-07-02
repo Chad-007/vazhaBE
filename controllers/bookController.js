@@ -1,42 +1,42 @@
-const Book = require("../models/book");
+const Book = require("../models/Book");
 
 const createBook = async (req, res) => {
-    const { id, title, status } = req.body;
-    const newBook = new Book({ id, title, status });
-
     try {
-        await newBook.save();
-        res.status(201).send("Book added successfully");
-    } catch (error) {
-        res.status(400).send(error.message);
+        await Book.create(req.body);
+        return res.status(200).send("Book Created Successfully");
+    } catch (e) {
+        return res.status(400).send(e.message);
     }
 };
 
 const readBooks = async (req, res) => {
     try {
-        const books = await Book.find();
-        res.status(200).json(books);
-    } catch (error) {
-        res.status(500).send(error.message);
+        const result = await Book.find();
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(500).send(e.message);
     }
 };
 
-const updateBookStatus = async (req, res) => {
-    const { id } = req.params;
-    const { status } = req.body;
-
-    if (status !== "booked" && status !== "not booked") {
-        return res.status(400).send("Invalid status value");
-    }
-
+const updateBook = async (req, res) => {
     try {
-        const book = await Book.findOneAndUpdate({ id }, { status }, { new: true });
-        if (!book) return res.status(404).send("Book not found");
-
-        res.status(200).send("Book status updated successfully");
-    } catch (error) {
-        res.status(400).send(error.message);
+        const { id } = req.params;
+        const updateData = req.body;
+        const result = await Book.findByIdAndUpdate(id, updateData, { new: true });
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(400).send(e.message);
     }
 };
 
-module.exports = { createBook, readBooks, updateBookStatus };
+const deleteBook = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Book.findByIdAndDelete(id);
+        return res.status(200).send("Book Deleted Successfully");
+    } catch (e) {
+        return res.status(500).send(e.message);
+    }
+};
+
+module.exports = { createBook, readBooks, updateBook, deleteBook };
