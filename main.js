@@ -14,16 +14,6 @@ client.connect("mongodb+srv://jomalsanish:pgqMaC0QHaq1BD6s@cluster0.rtmccwj.mong
 
 app.use(express.json());
 
-// app.get("/", (req, res) => {
-//     res.send("GET request successful");
-// });
-
-// app.post("/", (req, res) => {
-//     const data = req.body;
-//     console.log(data);
-//     res.status(200).send(`POST request successful with data: ${data.name}`);
-// });
-
 app.post("/book", bookController.createBook);
 app.get("/book", bookController.readBooks);
 app.put("/book/:id", bookController.updateBook);
